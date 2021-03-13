@@ -1,7 +1,7 @@
 NEURON {
-	SUFFIX K_Ch_tau
+	SUFFIX K_Ch_milo
 	USEION k READ ek WRITE ik
-	RANGE gKv3bar, gKv3, mInf, mTau, ek
+	RANGE gKv3bar, gKv3, mInf, mTau, ek, vHalf
 }
 
 STATE {
