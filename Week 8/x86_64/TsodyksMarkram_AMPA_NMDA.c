@@ -1,4 +1,4 @@
-/* Created by Language version: 7.7.0 */
+/* Created by Language version: 7.5.0 */
 /* VECTORIZED */
 #define NRN_VECTORIZED 1
 #include <stdio.h>
@@ -104,15 +104,6 @@ extern void hoc_register_limits(int, HocParmLimits*);
 extern void hoc_register_units(int, HocParmUnits*);
 extern void nrn_promote(Prop*, int, int);
 extern Memb_func* memb_func;
- 
-#define NMODL_TEXT 1
-#if NMODL_TEXT
-static const char* nmodl_file_text;
-static const char* nmodl_filename;
-extern void hoc_reg_nmodl_text(int, const char*);
-extern void hoc_reg_nmodl_filename(int, const char*);
-#endif
-
  extern Prop* nrn_point_prop_;
  static int _pointtype;
  static void* _hoc_create_pnt(_ho) Object* _ho; { void* create_point_process();
@@ -210,7 +201,7 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  static void _ode_matsol_instance1(_threadargsproto_);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
- "7.7.0",
+ "7.5.0",
 "TsodyksMarkram_AMPA_NMDA",
  "tau_r_AMPA",
  "tau_d_AMPA",
@@ -302,10 +293,6 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 1, _thread_mem_init);
      _nrn_thread_reg(_mechtype, 0, _thread_cleanup);
- #if NMODL_TEXT
-  hoc_reg_nmodl_text(_mechtype, nmodl_file_text);
-  hoc_reg_nmodl_filename(_mechtype, nmodl_filename);
-#endif
   hoc_register_prop_size(_mechtype, 34, 3);
   hoc_register_dparam_semantics(_mechtype, 0, "area");
   hoc_register_dparam_semantics(_mechtype, 1, "pntproc");
@@ -315,7 +302,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  pnt_receive[_mechtype] = _net_receive;
  pnt_receive_size[_mechtype] = 1;
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 TsodyksMarkram_AMPA_NMDA E:/EPFL-Masters/Second Semester/In Silico Neuroscience/Week 8/Week8_Tutorial/Homework_week8/TsodyksMarkram_AMPA_NMDA.mod\n");
+ 	ivoc_help("help ?1 TsodyksMarkram_AMPA_NMDA /home/In Silico/Week 8/x86_64/TsodyksMarkram_AMPA_NMDA.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -654,184 +641,4 @@ _first = 0;
 
 #if defined(__cplusplus)
 } /* extern "C" */
-#endif
-
-#if NMODL_TEXT
-static const char* nmodl_filename = "TsodyksMarkram_AMPA_NMDA.mod";
-static const char* nmodl_file_text = 
-  "COMMENT\n"
-  "/**\n"
-  " * @file TsodyksMarkram_AMPA_NMDA.mod\n"
-  " * @brief An AMPA and NMDA glutamate receptor model with short-term depression\n"
-  " * and facilitation\n"
-  " * @author emuller\n"
-  " * @date 2017-05-11\n"
-  " * @remark Copyright \n"
-  "\n"
-  " BBP/EPFL 2005-2014; All rights reserved. \n"
-  " */\n"
-  "ENDCOMMENT\n"
-  "\n"
-  "\n"
-  "TITLE AMPA and NMDA glutamate receptor with TM short-term dynamics\n"
-  "\n"
-  "COMMENT\n"
-  "AMPA and NMDA glutamate receptor conductance using a dual-exponential profile\n"
-  "and incorporating Tsodyks-Markram short-term dynamics\n"
-  "ENDCOMMENT\n"
-  "\n"
-  ": Definition of variables which may be accesses by the user \n"
-  "NEURON {\n"
-  "    THREADSAFE\n"
-  "\n"
-  "    POINT_PROCESS TsodyksMarkram_AMPA_NMDA\n"
-  "    RANGE tau_r_AMPA, tau_d_AMPA\n"
-  "    RANGE tau_r_NMDA, tau_d_NMDA\n"
-  "    RANGE mg, gmax_AMPA, gmax_NMDA\n"
-  "    RANGE tau_rec, tau_facil, U1\n"
-  "    RANGE i, i_AMPA, i_NMDA, g_AMPA, g_NMDA, g, e\n"
-  "    NONSPECIFIC_CURRENT i\n"
-  "}\n"
-  "\n"
-  "\n"
-  ": Definition of constants which may be set by the user\n"
-  "PARAMETER {\n"
-  "\n"
-  "    tau_r_AMPA = 0.2   (ms)  : Dual-exponential conductance profile\n"
-  "    tau_d_AMPA = 1.7   (ms)  : IMPORTANT: tau_r < tau_d\n"
-  "    tau_r_NMDA = 0.29  (ms)  : Dual-exponential conductance profile\n"
-  "    tau_d_NMDA = 43    (ms)  : IMPORTANT: tau_r < tau_d\n"
-  "\n"
-  "    e = 0              (mV)  : AMPA and NMDA reversal potential\n"
-  "    mg = 1             (mM)  : Initial concentration of mg2+\n"
-  "    mggate\n"
-  "    \n"
-  "    gmax_AMPA = .001   (uS)  : Weight conversion factor (from nS to uS)\n"
-  "    gmax_NMDA = .001   (uS)  : Weight conversion factor (from nS to uS)\n"
-  "\n"
-  "    : Parameters of TM model\n"
-  "    tau_rec = 200      (ms)  : time constant of recovery from depression\n"
-  "    tau_facil = 200    (ms)  : time constant of facilitation\n"
-  "    U1 = 0.5           (1)   : baseline release probability\n"
-  "}\n"
-  "\n"
-  ": Declaration of state variables \n"
-  "STATE {\n"
-  "\n"
-  "    A_AMPA       : AMPA state variable to construct the dual-exponential profile\n"
-  "                 : rise kinetics with tau_r_AMPA\n"
-  "\n"
-  "    B_AMPA       : AMPA state variable to construct the dual-exponential profile\n"
-  "                 : decay kinetics with tau_d_AMPA\n"
-  "\n"
-  "    A_NMDA       : NMDA state variable to construct the dual-exponential profile\n"
-  "                 : rise kinetics with tau_r_NMDA\n"
-  "\n"
-  "    B_NMDA       : NMDA state variable to construct the dual-exponential profile\n"
-  "                 : decay kinetics with tau_d_NMDA\n"
-  "\n"
-  ": State variables for the TM model\n"
-  "    R            : Running fraction of available vesicles\n"
-  "    Use          : Running value of the release probability\n"
-  "}\n"
-  "\n"
-  ": Declaration of variables that are computed, e.g. in the BREAKPOINT block\n"
-  "ASSIGNED {\n"
-  "    v (mV)\n"
-  "    i (nA)\n"
-  "    i_AMPA (nA)\n"
-  "    i_NMDA (nA)\n"
-  "    g_AMPA (uS)\n"
-  "    g_NMDA (uS)\n"
-  "    g (uS)\n"
-  "    factor_AMPA\n"
-  "    factor_NMDA\n"
-  "}\n"
-  "\n"
-  ": Definition of initial conditions\n"
-  "INITIAL{\n"
-  "    LOCAL tp_AMPA, tp_NMDA     : Declaration of some local variables\n"
-  "\n"
-  "    : Zero receptor rise and fall kinetics variables\n"
-  "    A_AMPA = 0\n"
-  "    B_AMPA = 0\n"
-  "\n"
-  "    A_NMDA = 0\n"
-  "    B_NMDA = 0\n"
-  "\n"
-  "    : Compute constants needed to normalize the dual-exponential receptor dynamics\n"
-  "\n"
-  "    : Expression for time to peak of the AMPA dual-exponential conductance\n"
-  "    tp_AMPA = (tau_r_AMPA*tau_d_AMPA)/(tau_d_AMPA-tau_r_AMPA)*log(tau_d_AMPA/tau_r_AMPA)\n"
-  "    : Expression for time to peak of the NMDA dual-exponential conductance\n"
-  "    tp_NMDA = (tau_r_NMDA*tau_d_NMDA)/(tau_d_NMDA-tau_r_NMDA)*log(tau_d_NMDA/tau_r_NMDA)\n"
-  "\n"
-  "    : AMPA Normalization factor - so that when t = tp_AMPA, gsyn = gpeak\n"
-  "    factor_AMPA = -exp(-tp_AMPA/tau_r_AMPA)+exp(-tp_AMPA/tau_d_AMPA) \n"
-  "    factor_AMPA = 1/factor_AMPA\n"
-  "    : NMDA Normalization factor - so that when t = tp_NMDA, gsyn = gpeak\n"
-  "    factor_NMDA = -exp(-tp_NMDA/tau_r_NMDA)+exp(-tp_NMDA/tau_d_NMDA) \n"
-  "    factor_NMDA = 1/factor_NMDA\n"
-  "\n"
-  "    R = 1\n"
-  "    Use = 0\n"
-  "\n"
-  "}\n"
-  "\n"
-  ": Declare method to propagate the state variables in time\n"
-  "BREAKPOINT {\n"
-  "\n"
-  "    : Specify to solve system of equations \"odes\", declared below (DERIVATIVE block)\n"
-  "    : \"cnexp\" specifies the intergration method, it is\n"
-  "    : an implicit integration method that is stable even for stiff systems\n"
-  "    SOLVE odes METHOD cnexp\n"
-  "\n"
-  "    : Compute and assign quantities which depend on the state variables\n"
-  "\n"
-  "    : Compute the time varying AMPA receptor conductance as \n"
-  "    : the difference of state variables B_AMPA and A_AMPA\n"
-  "    g_AMPA = gmax_AMPA*(B_AMPA-A_AMPA) \n"
-  "\n"
-  "    : NMDA is similar, but with a Magnesium block term: mggate\n"
-  "    : Magneisum block kinetics due to Jahr & Stevens 1990\n"
-  "    mggate = 1 / (1 + exp(0.062 (/mV) * -(v)) * (mg / 3.57 (mM))) \n"
-  "    g_NMDA = mggate*gmax_NMDA*(B_NMDA-A_NMDA)  \n"
-  "\n"
-  "    : Total conductance\n"
-  "    g = g_AMPA + g_NMDA\n"
-  "\n"
-  "    : Compute the AMPA and NMDA specific currents\n"
-  "    i_AMPA = g_AMPA*(v-e) \n"
-  "    i_NMDA = g_NMDA*(v-e) \n"
-  "\n"
-  "    : Compute the total current\n"
-  "    i = i_AMPA + i_NMDA\n"
-  "}\n"
-  "\n"
-  ": Declaration of ODEs solved for in the BREAKPOINT block\n"
-  "DERIVATIVE odes {\n"
-  "    A_AMPA' = -A_AMPA/tau_r_AMPA\n"
-  "    B_AMPA' = -B_AMPA/tau_d_AMPA\n"
-  "    A_NMDA' = -A_NMDA/tau_r_NMDA\n"
-  "    B_NMDA' = -B_NMDA/tau_d_NMDA\n"
-  "\n"
-  "    R' = (1-R)/tau_rec\n"
-  "    Use' = -Use/tau_facil\n"
-  "}\n"
-  "\n"
-  ": Block to be executed for a pre-synaptic spike event\n"
-  "NET_RECEIVE (weight) {\n"
-  "    LOCAL A\n"
-  "    \n"
-  "    Use = Use + U1*(1-Use)\n"
-  "    A = Use*R\n"
-  "    R = R - A\n"
-  "    \n"
-  "    A_AMPA = A_AMPA + A*weight*factor_AMPA\n"
-  "    B_AMPA = B_AMPA + A*weight*factor_AMPA\n"
-  "    A_NMDA = A_NMDA + A*weight*factor_NMDA\n"
-  "    B_NMDA = B_NMDA + A*weight*factor_NMDA\n"
-  "}\n"
-  "\n"
-  ;
 #endif
