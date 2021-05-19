@@ -4,7 +4,7 @@ from neuron import h
 h.load_file("stdrun.hoc");
 h.stdinit();
 
-class PYR1:
+class INH2:
     def __init__(self):
         self.build_morphology()
         self.define_biophysics()
@@ -20,7 +20,7 @@ class PYR1:
         #cell = h.Import3d_Neurolucida3() # We have an .asc morphology file
 
         # Read the file and creates automatically section.connect(parent) statements
-        cell.input('morph_06.swc')
+        cell.input('morph_10.swc')
 
         # Instantiate morphology for simulation and
         # execute the connect statements and loads the cell into h scope
